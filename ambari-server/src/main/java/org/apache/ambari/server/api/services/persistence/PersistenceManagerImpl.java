@@ -74,35 +74,37 @@ public class PersistenceManagerImpl implements PersistenceManager {
         "to create/store user persisted data.");
     }
 
-    if (resource != null) {
-
-      Map<Resource.Type, String> mapResourceIds = resource.getKeyValueMap();
-      Resource.Type type = resource.getResourceDefinition().getType();
-      Schema schema = m_controller.getSchema(type);
-
-      Set<NamedPropertySet> setProperties = requestBody.getNamedPropertySets();
-      if (setProperties.isEmpty()) {
-        requestBody.addPropertySet(new NamedPropertySet("", new HashMap<String, Object>()));
-      }
-
-      for (NamedPropertySet propertySet : setProperties) {
-        for (Map.Entry<Resource.Type, String> entry : mapResourceIds.entrySet()) {
-          Map<String, Object> mapProperties = propertySet.getProperties();
-          String property = schema.getKeyPropertyId(entry.getKey());
-          if (!mapProperties.containsKey(property)) {
-            mapProperties.put(property, entry.getValue());
-          }
-        }
-      }
-      return m_controller.createResources(type, createControllerRequest(requestBody));
-    } else {
+    if (resource == null) {
       throw new NoSuchParentResourceException("Resource is null");
     }
+
+    Map<Resource.Type, String> resourceMapResourceIds = resource.getKeyValueMap();
+    Resource.Type type = resource.getResourceDefinition().getType();
+    Schema schema = m_controller.getSchema(type);
+
+    Set<NamedPropertySet> requestNamedPropertySets = requestBody.getNamedPropertySets();
+
+    if (requestNamedPropertySets.isEmpty()) {
+      requestBody.addPropertySet(new NamedPropertySet("", new HashMap<String, Object>()));
+    }
+
+    for (NamedPropertySet requestNamedPropertySet : requestNamedPropertySets) {
+
+      for (Map.Entry<Resource.Type, String> entry : resourceMapResourceIds.entrySet()) {
+        Map<String, Object> requestMapProperties = requestNamedPropertySet.getProperties();
+        String property = schema.getKeyPropertyId(entry.getKey());
+        if (!requestMapProperties.containsKey(property)) {
+          requestMapProperties.put(property, entry.getValue());
+        }
+      }
+    }
+    return m_controller.createResources(type, createControllerRequest(requestBody));
+
   }
 
   @Override
   public RequestStatus update(ResourceInstance resource, RequestBody requestBody)
-      throws UnsupportedPropertyException, SystemException, NoSuchParentResourceException, NoSuchResourceException {
+    throws UnsupportedPropertyException, SystemException, NoSuchParentResourceException, NoSuchResourceException {
 
     Map<Resource.Type, String> mapResourceIds = resource.getKeyValueMap();
     Resource.Type type = resource.getResourceDefinition().getType();

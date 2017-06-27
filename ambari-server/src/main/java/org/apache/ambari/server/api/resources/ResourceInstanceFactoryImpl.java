@@ -471,6 +471,9 @@ public class ResourceInstanceFactoryImpl implements ResourceInstanceFactory {
       case RemoteCluster:
         resourceDefinition = new RemoteClusterResourceDefinition();
         break;
+      case AmbariConfiguration:
+        resourceDefinition = new AmbariConfigurationResourceDefinition();
+        break;
 
       default:
         throw new IllegalArgumentException("Unsupported resource type: " + type);

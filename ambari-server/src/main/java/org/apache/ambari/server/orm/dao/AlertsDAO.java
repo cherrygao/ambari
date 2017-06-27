@@ -220,11 +220,11 @@ public class AlertsDAO implements Cleanable {
    * @return all alerts or an empty list if none exist (never {@code null}).
    */
   @RequiresSession
-  public List<AlertHistoryEntity> findAll() {
-    TypedQuery<AlertHistoryEntity> query = m_entityManagerProvider.get().createNamedQuery(
-        "AlertHistoryEntity.findAll", AlertHistoryEntity.class);
+  public List<AlertHistoryEntity> findAll() {TypedQuery<AlertHistoryEntity> query = m_entityManagerProvider.get().createNamedQuery(
+    "AlertHistoryEntity.findAll", AlertHistoryEntity.class);
 
     return m_daoUtils.selectList(query);
+
   }
 
   /**

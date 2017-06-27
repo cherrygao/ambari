@@ -62,6 +62,7 @@ import org.apache.ambari.server.cleanup.ClasspathScannerUtils;
 import org.apache.ambari.server.configuration.Configuration;
 import org.apache.ambari.server.configuration.Configuration.ConnectionPoolType;
 import org.apache.ambari.server.configuration.Configuration.DatabaseType;
+import org.apache.ambari.server.controller.internal.AmbariConfigurationResourceProvider;
 import org.apache.ambari.server.controller.internal.ComponentResourceProvider;
 import org.apache.ambari.server.controller.internal.CredentialResourceProvider;
 import org.apache.ambari.server.controller.internal.HostComponentResourceProvider;
@@ -450,37 +451,38 @@ public class ControllerModule extends AbstractModule {
    */
   private void installFactories() {
     install(new FactoryModuleBuilder().implement(
-        Cluster.class, ClusterImpl.class).build(ClusterFactory.class));
+      Cluster.class, ClusterImpl.class).build(ClusterFactory.class));
     install(new FactoryModuleBuilder().implement(
-        Host.class, HostImpl.class).build(HostFactory.class));
+      Host.class, HostImpl.class).build(HostFactory.class));
     install(new FactoryModuleBuilder().implement(
-        Service.class, ServiceImpl.class).build(ServiceFactory.class));
+      Service.class, ServiceImpl.class).build(ServiceFactory.class));
 
     install(new FactoryModuleBuilder()
-        .implement(ResourceProvider.class, Names.named("host"), HostResourceProvider.class)
-        .implement(ResourceProvider.class, Names.named("hostComponent"), HostComponentResourceProvider.class)
-        .implement(ResourceProvider.class, Names.named("service"), ServiceResourceProvider.class)
-        .implement(ResourceProvider.class, Names.named("component"), ComponentResourceProvider.class)
-        .implement(ResourceProvider.class, Names.named("member"), MemberResourceProvider.class)
-        .implement(ResourceProvider.class, Names.named("repositoryVersion"), RepositoryVersionResourceProvider.class)
-        .implement(ResourceProvider.class, Names.named("hostKerberosIdentity"), HostKerberosIdentityResourceProvider.class)
-        .implement(ResourceProvider.class, Names.named("credential"), CredentialResourceProvider.class)
-        .implement(ResourceProvider.class, Names.named("kerberosDescriptor"), KerberosDescriptorResourceProvider.class)
-        .implement(ResourceProvider.class, Names.named("upgrade"), UpgradeResourceProvider.class)
-        .build(ResourceProviderFactory.class));
+      .implement(ResourceProvider.class, Names.named("host"), HostResourceProvider.class)
+      .implement(ResourceProvider.class, Names.named("hostComponent"), HostComponentResourceProvider.class)
+      .implement(ResourceProvider.class, Names.named("service"), ServiceResourceProvider.class)
+      .implement(ResourceProvider.class, Names.named("component"), ComponentResourceProvider.class)
+      .implement(ResourceProvider.class, Names.named("member"), MemberResourceProvider.class)
+      .implement(ResourceProvider.class, Names.named("repositoryVersion"), RepositoryVersionResourceProvider.class)
+      .implement(ResourceProvider.class, Names.named("hostKerberosIdentity"), HostKerberosIdentityResourceProvider.class)
+      .implement(ResourceProvider.class, Names.named("credential"), CredentialResourceProvider.class)
+      .implement(ResourceProvider.class, Names.named("kerberosDescriptor"), KerberosDescriptorResourceProvider.class)
+      .implement(ResourceProvider.class, Names.named("upgrade"), UpgradeResourceProvider.class)
+      .implement(ResourceProvider.class, Names.named("ambariConfiguration"), AmbariConfigurationResourceProvider.class)
+      .build(ResourceProviderFactory.class));
 
     install(new FactoryModuleBuilder().implement(
       ServiceComponent.class, ServiceComponentImpl.class).build(
       ServiceComponentFactory.class));
     install(new FactoryModuleBuilder().implement(
-        ServiceComponentHost.class, ServiceComponentHostImpl.class).build(
-        ServiceComponentHostFactory.class));
+      ServiceComponentHost.class, ServiceComponentHostImpl.class).build(
+      ServiceComponentHostFactory.class));
     install(new FactoryModuleBuilder().implement(
-        Config.class, ConfigImpl.class).build(ConfigFactory.class));
+      Config.class, ConfigImpl.class).build(ConfigFactory.class));
     install(new FactoryModuleBuilder().implement(
-        ConfigGroup.class, ConfigGroupImpl.class).build(ConfigGroupFactory.class));
+      ConfigGroup.class, ConfigGroupImpl.class).build(ConfigGroupFactory.class));
     install(new FactoryModuleBuilder().implement(RequestExecution.class,
-        RequestExecutionImpl.class).build(RequestExecutionFactory.class));
+      RequestExecutionImpl.class).build(RequestExecutionFactory.class));
 
     bind(StageFactory.class).to(StageFactoryImpl.class);
     bind(RoleCommandOrderProvider.class).to(CachedRoleCommandOrderProvider.class);

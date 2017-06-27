@@ -26,14 +26,15 @@ import org.apache.ambari.server.controller.AmbariServer;
 import org.apache.ambari.server.controller.spi.Resource;
 import org.apache.ambari.server.controller.spi.ResourceProvider;
 import org.apache.ambari.server.controller.utilities.PropertyHelper;
-
-import com.google.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The default provider module implementation.
  */
 public class DefaultProviderModule extends AbstractProviderModule {
-  @Inject
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(DefaultProviderModule.class);
   private AmbariManagementController managementController;
 
   // ----- Constructors ------------------------------------------------------
@@ -52,8 +53,10 @@ public class DefaultProviderModule extends AbstractProviderModule {
 
   @Override
   protected ResourceProvider createResourceProvider(Resource.Type type) {
-    Set<String>               propertyIds    = PropertyHelper.getPropertyIds(type);
-    Map<Resource.Type,String> keyPropertyIds = PropertyHelper.getKeyPropertyIds(type);
+
+    LOGGER.debug("Creating resource provider for the type: {}", type);
+    Set<String> propertyIds = PropertyHelper.getPropertyIds(type);
+    Map<Resource.Type, String> keyPropertyIds = PropertyHelper.getKeyPropertyIds(type);
 
     switch (type.getInternalType()) {
       case Workflow:
@@ -124,10 +127,12 @@ public class DefaultProviderModule extends AbstractProviderModule {
         return new ArtifactResourceProvider(managementController);
       case RemoteCluster:
         return new RemoteClusterResourceProvider();
-
+      case AmbariConfiguration:
+        return new AmbariConfigurationResourceProvider();
       default:
+        LOGGER.debug("Delegating creation of resource provider for: {} to the AbstractControllerResourceProvider", type.getInternalType());
         return AbstractControllerResourceProvider.getResourceProvider(type, propertyIds,
-            keyPropertyIds, managementController);
+          keyPropertyIds, managementController);
     }
   }
 }
